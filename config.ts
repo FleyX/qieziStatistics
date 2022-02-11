@@ -6,9 +6,14 @@ const rootPath = path.resolve(__dirname, '..');
 let config = {
 	rootPath,
 	port: process.env.PORT ? parseInt(process.env.PORT) : 8089,
-	urlPrefix: '/openRenamer/api',
+	urlPrefix: '/qiezi/api',
 	//是否为windows平台
 	isWindows: process.platform.toLocaleLowerCase().includes("win"),
+	//redis相关配置
+	redis: {
+		enable: true,
+		url: "redis://localhost:6379"
+	},
 	//sqlite相关配置
 	sqlite: {
 		enable: false, //是否启用sqlite

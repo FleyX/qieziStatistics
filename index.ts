@@ -10,6 +10,7 @@ import init from "./middleware/init";
 import SqliteUtil from './util/SqliteHelper';
 import log from './util/LogUtil';
 import { MysqlUtil } from "./util/MysqlHelper";
+import { RedisHelper } from "./util/RedisHelper";
 
 
 log.info(config);
@@ -37,6 +38,10 @@ app.use(RouterMW(router, path.join(config.rootPath, "dist/api")));
 	//初始化mysql
 	if (config.mysql.enable) {
 		await MysqlUtil.createPool();
+	}
+	//初始化redis
+	if (config.redis.enable) {
+		await RedisHelper.create();
 	}
 	app.listen(config.port);
 	log.info(`server listened `, config.port);
