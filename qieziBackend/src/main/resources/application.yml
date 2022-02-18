@@ -1,0 +1,48 @@
+server:
+  port: 8088
+  servlet:
+    # 不要在最后加/
+    context-path: /qiezi/api
+spring:
+  jackson:
+    default-property-inclusion: non_null
+  servlet:
+    # 表单配置
+    multipart:
+      max-request-size: 10MB
+      max-file-size: 10MB
+  profiles:
+    active: dev
+  application:
+    name: qiezi
+  flyway:
+    baseline-on-migrate: true
+  cache:
+    type: redis
+  redis:
+    database: 0
+    host: localhost
+    port: 6379
+    password:
+    timeout: 20000ms
+    lettuce:
+      pool:
+        max-active: 20
+        max-wait: 500ms
+        max-idle: 20
+        min-idle: 2
+  datasource:
+    name: mysql
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.zaxxer.hikari.HikariDataSource
+    username: root
+    password: 123456
+    url: jdbc:mysql://localhost:3306/qiezi?useUnicode=true&characterEncoding=utf-8&useSSL=false&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+    hikari:
+      maximum-pool-size: 10
+mybatis:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  # classpath后面加*，值里面的*才起作用
+  mapper-locations: classpath*:mapper/*.xml
+debug: false
