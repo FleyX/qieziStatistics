@@ -32,8 +32,6 @@ import { get, post } from "../util/HttpUtil";
 let imgData = ref("");
 let getCaptcha = async () => "data:image/png;base64," + (await get("/captcha/sign"));
 onMounted(async () => {
-  window.qieziStatisticHost = "http://localhost:8080";
-  window.qieziStatisticKey = "238f2c45fa53454b95644280a12bc735";
   imgData.value = await getCaptcha();
 });
 let onCaptchaClick = async () => (imgData.value = await getCaptcha());
