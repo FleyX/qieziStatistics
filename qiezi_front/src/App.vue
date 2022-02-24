@@ -1,9 +1,9 @@
 <template>
   <router-view />
 
-  <div id="qieziStatistic9527Host" style="display: none">
-    <div style="display: inline-block; width: 50%; text-align: right">页面访问次数:<span id="qieziStatistic9527HostPv"></span>次&nbsp;</div>
-    <div style="display: inline-block; width: 50%; text-align: left">&nbsp;总访客数:<span id="qieziStatistic9527HostUv"></span>人</div>
+  <div  style="">
+    <div id="qieziStatisticHtmlHostPv" style="display: inline-block; width: 50%; text-align: right">页面访问次数:<span id="qieziStatisticHtmlHostPvValue"></span>次&nbsp;</div>
+    <div id="qieziStatisticHtmlHostUv" style="display: inline-block; width: 50%; text-align: left">&nbsp;总访客数:<span id="qieziStatisticHtmlHostUvValue"></span>人</div>
   </div>
 </template>
 
