@@ -3,7 +3,7 @@ services:
   front:
     image: nginx
     networks:
-      - bookmark
+      - qiezi_statistic
     volumes:
       - /etc/localtime:/etc/localtime
       - ./config/timezone:/etc/timezone
@@ -15,7 +15,7 @@ services:
   backend:
     image: openjdk:11.0
     networks:
-      - bookmark
+      - qiezi_statistic
     volumes:
       - /etc/localtime:/etc/localtime
       - ./config/timezone:/etc/timezone
@@ -30,9 +30,9 @@ services:
         -Dmybatis-plus.configuration.log-impl=org.apache.ibatis.logging.nologging.NoLoggingImpl \
         -Dspring.datasource.user='${MYSQL_USER}' \
         -Dspring.datasource.password='${MYSQL_PASSWORD}' \
-        -Dspring.datasource.url=jdbc:mysql://${MYSQL_ADDRESS}/bookmark?useUnicode=true\&characterEncoding=utf-8\&useSSL=false\&useJDBCCompliantTimezoneShift=true\&useLegacyDatetimeCode=false\&serverTimezone=UTC \
+        -Dspring.datasource.url=jdbc:mysql://${MYSQL_ADDRESS}/qiezi?useUnicode=true\&characterEncoding=utf-8\&useSSL=false\&useJDBCCompliantTimezoneShift=true\&useLegacyDatetimeCode=false\&serverTimezone=UTC \
         -Dspring.redis.host=${REDIS_HOST} \
         -Dspring.redis.port=${REDIS_PORT} \
         service.jar
 networks:
-  bookmark:
+  qiezi_statistic:
