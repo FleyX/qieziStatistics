@@ -1,1 +1,33 @@
-<!-- 真正的主页 -->
+<!DOCTYPE html>
+<html lang="">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <link rel="icon" href="/favicon.ico" />
+    <title>茄子统计</title>
+  </head>
+  <body>
+    <div class="app">
+		免费UV,PV统计，可自行部署，也可直接使用。使用文档见：<a href="/manage/">开始使用</a>
+	</div>
+    <div style="text-align: center;">
+      <div id="qieziStatisticHtmlHostPv" style="display: none;">页面访问次数:<span id="qieziStatisticHtmlHostPvValue"></span>次&nbsp;</div>
+      <div id="qieziStatisticHtmlHostUv" style="display: none;">&nbsp;总访客数:<span id="qieziStatisticHtmlHostUvValue"></span>人</div>
+    </div>
+	<script>
+		//设置统计的host，key
+		window.qieziStatisticHost="http://localhost:8080";
+		window.qieziStatisticKey="d862c12a68ad4d579c6066ac2f064a07";
+	</script>
+    <script src="./qieziStatistic_v1.js" type="text/javascript"></script>
+	<style>
+		.app{
+			width:80%;
+			margin: 0 auto;
+			text-align: center;
+		}
+	</style>
+	
+  </body>
+</html>
