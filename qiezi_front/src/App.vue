@@ -2,8 +2,8 @@
   <router-view />
 
   <div  style="">
-    <div id="qieziStatisticHtmlHostPv" style="display: inline-block; width: 50%; text-align: right">页面访问次数:<span id="qieziStatisticHtmlHostPvValue"></span>次&nbsp;</div>
-    <div id="qieziStatisticHtmlHostUv" style="display: inline-block; width: 50%; text-align: left">&nbsp;总访客数:<span id="qieziStatisticHtmlHostUvValue"></span>人</div>
+    <div id="qieziStatisticHtmlHostPv" style="display: none; width: 50%; text-align: right">页面访问次数:<span id="qieziStatisticHtmlHostPvValue"></span>次&nbsp;</div>
+    <div id="qieziStatisticHtmlHostUv" style="display: none; width: 50%; text-align: left">&nbsp;总访客数:<span id="qieziStatisticHtmlHostUvValue"></span>人</div>
   </div>
 </template>
 

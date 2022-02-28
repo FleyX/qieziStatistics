@@ -22,7 +22,7 @@
 		}
 	};
 	setTimeout(
-		() => {
+		function () {
 			var script = document.createElement("script");
 			script.type = "text/javascript";
 			script.defer = true;
@@ -44,6 +44,7 @@
 					key = temp;
 				}
 			}
+			console.Console(requestHost, key);
 			if (!key) {
 				return;
 			}

@@ -2,6 +2,7 @@
 //process.env.VUE_APP_QIEZI_HOST = "http://localhost:8080";
 //process.env.VUE_APP_QIEZI_KEY = "aab3cad381f54ca5b7b9abeb2e09320a";
 module.exports = {
+  publicPath:"/manage",
   devServer: {
     proxy: {
       "/qiezi/api": {
