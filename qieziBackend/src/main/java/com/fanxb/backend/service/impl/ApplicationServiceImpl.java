@@ -84,21 +84,20 @@ public class ApplicationServiceImpl implements ApplicationService {
         }
 
         int hostId = getHostId(key);
-        HostPo uvPvData = hostDao.getUvPvById(hostId);
-        DetailPagePo detailUvPvData = detailPageDao.getUvPvById(hostId, path);
-        if (detailUvPvData == null) {
-            detailUvPvData = new DetailPagePo().setHostId(hostId).setPath(path).setUv(1).setPv(1);
+        HostPo hostData = hostDao.getUvPvById(hostId);
+        DetailPagePo detailData = detailPageDao.getUvPvById(hostId, path);
+        if (detailData == null) {
+            detailData = new DetailPagePo().setHostId(hostId).setPath(path).setUv(0).setPv(0);
         }
-        UvPvVo uvPvVo = new UvPvVo(uvPvData.getUv(), uvPvData.getPv(), detailUvPvData.getUv(), detailUvPvData.getPv());
+        //数据计算更新
+        updateData(NetUtil.getClientIp(request), hostData, detailData);
+        //写出
+        UvPvVo uvPvVo = new UvPvVo(hostData.getUv(), hostData.getPv(), detailData.getUv(), detailData.getPv());
         String uvPvVoStr = JSON.toJSONString(uvPvVo);
         String res = String.format("try{%s(%s);}catch(e){console.error(e);console.log(%s)}", callBack, uvPvVoStr, uvPvVoStr);
         response.setHeader(Header.CONTENT_TYPE.getValue(), ContentType.JSON.getValue());
         response.getOutputStream().write(res.getBytes(StandardCharsets.UTF_8));
         response.getOutputStream().flush();
-
-        //异步数据更新
-        DetailPagePo finalDetailUvPvData = detailUvPvData;
-        ThreadPoolUtil.execute(() -> updateData(NetUtil.getClientIp(request), uvPvData, finalDetailUvPvData));
     }
 
     /**
@@ -111,24 +110,30 @@ public class ApplicationServiceImpl implements ApplicationService {
      * date 2022/2/16 15:40
      */
     private void updateData(String ip, HostPo hostPo, DetailPagePo detailPagePo) {
-        String hostKey = RedisConstant.HOST_UV_PRE + hostPo.getId() + ip;
+        String hostKey = RedisConstant.HOST_UV_PRE + hostPo.getId() + "_" + ip;
         String hostVal = stringRedisTemplate.opsForValue().get(hostKey);
-        hostDao.updateUvPv(hostPo.getId(), hostVal == null ? 1 : 0);
+        hostPo.setPv(hostPo.getPv() + 1);
         long tomorrowZero = LocalDate.now().plusDays(1).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
         if (hostVal == null) {
             stringRedisTemplate.opsForValue().set(hostKey, "", tomorrowZero - System.currentTimeMillis(), TimeUnit.MILLISECONDS);
+            hostPo.setUv(hostPo.getUv() + 1);
         }
-
         String pageKey = RedisConstant.PAGE_UV_PRE + hostPo.getId() + ip + detailPagePo.getPath();
         String pageVal = stringRedisTemplate.opsForValue().get(pageKey);
-        if (detailPagePo.getId() == null) {
-            detailPageDao.insertOne(detailPagePo);
-        } else {
-            detailPageDao.updateUvPv(detailPagePo.getId(), pageVal == null ? 1 : 0);
-        }
+        detailPagePo.setPv(detailPagePo.getPv() + 1);
         if (pageVal == null) {
             stringRedisTemplate.opsForValue().set(pageKey, "", tomorrowZero - System.currentTimeMillis(), TimeUnit.MILLISECONDS);
+            detailPagePo.setUv(detailPagePo.getUv() + 1);
         }
+        //异步更新sql
+        ThreadPoolUtil.execute(() -> {
+            hostDao.updateUvPv(hostPo.getId(), hostVal == null ? 1 : 0);
+            if (detailPagePo.getId() == null) {
+                detailPageDao.insertOne(detailPagePo);
+            } else {
+                detailPageDao.updateUvPv(detailPagePo.getId(), pageVal == null ? 1 : 0);
+            }
+        });
     }
 
     /**

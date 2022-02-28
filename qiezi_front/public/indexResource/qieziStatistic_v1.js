@@ -4,15 +4,15 @@
 	var callback = name + "CallBack";
 	window[callback] = function (a) {
 		var hostPvNode = document.getElementById(name + "HostPv");
-		if (hostNode != null) {
+		if (hostPvNode != null) {
 			document.getElementById(name + "HostPvValue").innerText = a.totalPv;
-			hostNode.style.display = "inline";
+			hostPvNode.style.display = "inline";
 		}
 
 		var hostUvNode = document.getElementById(name + "HostUv");
-		if (hostNode != null) {
-			document.getElementById(name + "HostUvValue").innerText = a.totalPv;
-			hostNode.style.display = "inline";
+		if (hostUvNode != null) {
+			document.getElementById(name + "HostUvValue").innerText = a.totalUv;
+			hostUvNode.style.display = "inline";
 		}
 
 		var postNode = document.getElementById(name + "Post");
@@ -37,14 +37,14 @@
 			}
 			var key = null;
 			if (window.qieziStatisticKey && window.qieziStatisticKey.trim().length > 0) {
-				requestHost = window.qieziStatisticKey;
+				key = window.qieziStatisticKey;
 			} else if (window.CONFIG && window.CONFIG.web_analytics.qieziStatistics.app_key) {
 				var temp = window.CONFIG.web_analytics.qieziStatistics.app_key;
 				if (temp.trim().length > 0) {
 					key = temp;
 				}
 			}
-			console.Console(requestHost, key);
+			console.log(requestHost, key);
 			if (!key) {
 				return;
 			}
