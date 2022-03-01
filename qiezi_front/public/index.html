@@ -16,19 +16,17 @@
     </noscript>
 
     <div id="app"></div>
+
     <!-- built files will be auto injected -->
+    <div style="text-align: center;">
+        <div id="qieziStatisticHtmlHostPv" style="display: none;">页面访问次数:<span id="qieziStatisticHtmlHostPvValue"></span>次&nbsp;</div>
+        <div id="qieziStatisticHtmlHostUv" style="display: none;">&nbsp;总访客数:<span id="qieziStatisticHtmlHostUvValue"></span>人</div>
+    </div>
     <script>
-        let host = process.env.VUE_APP_QIEZI_HOST;
-        console.log("qieziHost:" + host);
-        if (host && host.trim().length > 0) {
-            window.qieziStatisticHost = host;
-        }
-        let key = process.env.VUE_APP_QIEZI_KEY;
-        console.log("qieziKey:" + key);
-        if (key && key.trim().length > 0) {
-            window.qieziStatisticKey = key;
-        }
+        //设置实际部署的host和key
+        window.qieziStatisticHost="http://localhost:8080";
+        window.qieziStatisticKey="d862c12a68ad4d579c6066ac2f064a07";
     </script>
-    <script src="qiezijs/1.0/qiezi_statistic.js" type="text/javascript"></script>
+    <script src="/qiezijs/1.0/qiezi_statistic.js" type="text/javascript"></script>
   </body>
 </html>
