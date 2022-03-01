@@ -17,6 +17,18 @@
 
     <div id="app"></div>
     <!-- built files will be auto injected -->
+    <script>
+        let host = process.env.VUE_APP_QIEZI_HOST;
+        console.log("qieziHost:" + host);
+        if (host && host.trim().length > 0) {
+            window.qieziStatisticHost = host;
+        }
+        let key = process.env.VUE_APP_QIEZI_KEY;
+        console.log("qieziKey:" + key);
+        if (key && key.trim().length > 0) {
+            window.qieziStatisticKey = key;
+        }
+    </script>
     <script src="qiezijs/1.0/qiezi_statistic.js" type="text/javascript"></script>
   </body>
 </html>

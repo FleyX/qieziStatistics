@@ -10,18 +10,6 @@
 <script setup>
 import { onMounted } from "@vue/runtime-core";
 
-onMounted(async () => {
-  let host = process.env.VUE_APP_QIEZI_HOST;
-  console.log("qieziHost:" + host);
-  if (host && host.trim().length > 0) {
-    window.qieziStatisticHost = host;
-  }
-  let key = process.env.VUE_APP_QIEZI_KEY;
-  console.log("qieziKey:" + key);
-  if (key && key.trim().length > 0) {
-    window.qieziStatisticKey = key;
-  }
-});
 </script>
 
 <style lang="less">
