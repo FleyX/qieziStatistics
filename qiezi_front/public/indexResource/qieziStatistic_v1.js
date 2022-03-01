@@ -21,40 +21,35 @@
 			postNode.style.display = "inline";
 		}
 	};
-	setTimeout(
-		function () {
-			var script = document.createElement("script");
-			script.type = "text/javascript";
-			script.defer = true;
-			var requestHost = "https://qiezi.fleyx.com";
-			if (window.qieziStatisticHost != undefined && window.qieziStatisticHost.trim().length > 0) {
-				requestHost = window.qieziStatisticHost;
-			} else if (window.CONFIG && window.CONFIG.web_analytics.qieziStatistics.app_host) {
-				var temp = window.CONFIG.web_analytics.qieziStatistics.app_host;
-				if (temp.trim().length > 0) {
-					requestHost = temp;
-				}
-			}
-			var key = null;
-			if (window.qieziStatisticKey && window.qieziStatisticKey.trim().length > 0) {
-				key = window.qieziStatisticKey;
-			} else if (window.CONFIG && window.CONFIG.web_analytics.qieziStatistics.app_key) {
-				var temp = window.CONFIG.web_analytics.qieziStatistics.app_key;
-				if (temp.trim().length > 0) {
-					key = temp;
-				}
-			}
-			console.log(requestHost, key);
-			if (!key) {
-				return;
-			}
-			script.src = requestHost +
-				"/qiezi/api/application/visit?callBack=" +
-				callback +
-				"&key=" +
-				window.qieziStatisticKey;
-			document.getElementsByTagName("head")[0].appendChild(script);
-		},
-		window.qieziStatisticKey == undefined ? 1000 : 1,
-	);
+	var script = document.createElement("script");
+	script.type = "text/javascript";
+	script.defer = true;
+	var requestHost = "https://qiezi.fleyx.com";
+	if (window.qieziStatisticHost != undefined && window.qieziStatisticHost.trim().length > 0) {
+		requestHost = window.qieziStatisticHost;
+	} else if (window.CONFIG && window.CONFIG.web_analytics.qieziStatistics.app_host) {
+		var temp = window.CONFIG.web_analytics.qieziStatistics.app_host;
+		if (temp.trim().length > 0) {
+			requestHost = temp;
+		}
+	}
+	var key = null;
+	if (window.qieziStatisticKey && window.qieziStatisticKey.trim().length > 0) {
+		key = window.qieziStatisticKey;
+	} else if (window.CONFIG && window.CONFIG.web_analytics.qieziStatistics.app_key) {
+		var temp = window.CONFIG.web_analytics.qieziStatistics.app_key;
+		if (temp.trim().length > 0) {
+			key = temp;
+		}
+	}
+	console.log(requestHost, key);
+	if (!key) {
+		return;
+	}
+	script.src = requestHost +
+		"/qiezi/api/application/visit?callBack=" +
+		callback +
+		"&key=" +
+		key;
+	document.getElementsByTagName("head")[0].appendChild(script);
 })();

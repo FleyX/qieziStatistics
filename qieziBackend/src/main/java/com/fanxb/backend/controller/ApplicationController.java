@@ -44,6 +44,7 @@ public class ApplicationController {
      * date 2022/2/16 15:24
      */
     @GetMapping("/visit")
+    @ResponseBody
     public void visit(HttpServletRequest request, HttpServletResponse response,
                       @NotBlank(message = "回调函数不能为空") String callBack, @NotBlank(message = "key不能为空") String key) throws IOException {
         applicationService.visit(request, response, callBack, key);
