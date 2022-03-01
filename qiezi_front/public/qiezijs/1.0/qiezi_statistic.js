@@ -25,7 +25,7 @@
 	script.type = "text/javascript";
 	script.defer = true;
 	var requestHost = "https://qiezi.fleyx.com";
-	if (window.qieziStatisticHost != undefined && window.qieziStatisticHost.trim().length > 0) {
+	if (window.qieziStatisticHost !== undefined && window.qieziStatisticHost.trim().length > 0) {
 		requestHost = window.qieziStatisticHost;
 	} else if (window.CONFIG && window.CONFIG.web_analytics.qieziStatistics.app_host) {
 		var temp = window.CONFIG.web_analytics.qieziStatistics.app_host;
