@@ -2,7 +2,6 @@ package com.fanxb.backend.service.impl;
 
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.http.ContentType;
 import cn.hutool.http.Header;
 import com.alibaba.fastjson.JSON;
 import com.fanxb.backend.constants.RedisConstant;
@@ -18,6 +17,7 @@ import com.fanxb.backend.entity.vo.UvPvVo;
 import com.fanxb.backend.service.ApplicationService;
 import com.fanxb.backend.util.NetUtil;
 import com.fanxb.backend.util.ThreadPoolUtil;
+import jdk.jfr.ContentType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
@@ -95,7 +95,7 @@ public class ApplicationServiceImpl implements ApplicationService {
         UvPvVo uvPvVo = new UvPvVo(hostData.getUv(), hostData.getPv(), detailData.getUv(), detailData.getPv());
         String uvPvVoStr = JSON.toJSONString(uvPvVo);
         String res = String.format("try{%s(%s);}catch(e){console.error(e);console.log(%s)}", callBack, uvPvVoStr, uvPvVoStr);
-        response.setHeader(Header.CONTENT_TYPE.getValue(), ContentType.JSON.getValue());
+        response.setHeader(Header.CONTENT_TYPE.getValue(), "text/javascript");
         response.getOutputStream().write(res.getBytes(StandardCharsets.UTF_8));
         response.getOutputStream().flush();
     }
