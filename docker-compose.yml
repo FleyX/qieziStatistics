@@ -1,6 +1,6 @@
 version: "2"
 services:
-  front:
+  qiezi_front:
     image: nginx
     networks:
       - qiezi_statistic
@@ -12,7 +12,7 @@ services:
     ports:
       - ${NGINX_PORT}:8080
 
-  backend:
+  qiezi_backend:
     image: openjdk:11.0
     networks:
       - qiezi_statistic
