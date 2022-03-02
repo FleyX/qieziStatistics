@@ -67,22 +67,7 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     @Override
-    public void visit(HttpServletRequest request, HttpServletResponse response, String callBack, String key) throws IOException {
-        String refer = request.getHeader("Referer");
-        if (StrUtil.isEmpty(refer)) {
-            throw new CustomBaseException("未获取到来源路径");
-        }
-        String path;
-        try {
-            URL url = new URL(refer);
-            path = StrUtil.isEmpty(url.getPath()) ? "/" : url.getPath();
-        } catch (Exception e) {
-            throw new CustomBaseException("url解析错误", e);
-        }
-        if (path.length() > 100) {
-            throw new CustomBaseException("路径长度不能大于100," + path);
-        }
-
+    public void visit(HttpServletRequest request, HttpServletResponse response, String callBack, String key, String path, boolean notAdd) throws IOException {
         int hostId = getHostId(key);
         HostPo hostData = hostDao.getUvPvById(hostId);
         DetailPagePo detailData = detailPageDao.getUvPvById(hostId, path);
@@ -90,7 +75,9 @@ public class ApplicationServiceImpl implements ApplicationService {
             detailData = new DetailPagePo().setHostId(hostId).setPath(path).setUv(0).setPv(0);
         }
         //数据计算更新
-        updateData(NetUtil.getClientIp(request), hostData, detailData);
+        if (!notAdd) {
+            updateData(NetUtil.getClientIp(request), hostData, detailData);
+        }
         //写出
         UvPvVo uvPvVo = new UvPvVo(hostData.getUv(), hostData.getPv(), detailData.getUv(), detailData.getPv());
         String uvPvVoStr = JSON.toJSONString(uvPvVo);
@@ -101,7 +88,7 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     /**
-     * 更新数据
+     * 更新数据,pv:每次都增加，uv:24小时内同一ip,0-24点只统计一次
      *
      * @param ip           来源ip
      * @param hostPo       hostPo

@@ -1,4 +1,3 @@
-
 (function () {
 	var name = "qieziStatisticHtml";
 	var callback = name + "CallBack";
@@ -42,14 +41,12 @@
 			key = temp;
 		}
 	}
+	var ignoreLocalhost = window.CONFIG !== undefined && window.CONFIG.web_analytics.qieziStatistics.ignore_local;
 	console.log(requestHost, key);
 	if (!key) {
 		return;
 	}
-	script.src = requestHost +
-		"/qiezi/api/application/visit?callBack=" +
-		callback +
-		"&key=" +
-		key;
+	var notAdd = ignoreLocalhost && ['127.0.0.1', 'localhost'].indexOf(window.location.hostname) > -1;
+	script.src = `${requestHost}/qiezi/api/application/visit?callBack=${callback}&key=${key}&path=${encodeURIComponent(window.location.pathname)}&notAdd=${notAdd}`;
 	document.getElementsByTagName("head")[0].appendChild(script);
 })();

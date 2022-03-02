@@ -32,8 +32,10 @@ public interface ApplicationService {
      * @param response response
      * @param callBack callBack
      * @param key      key
+     * @param path     path
+     * @param notAdd   只返回，不计数
      * @author fanxb
      * date 2022/2/16 10:20
      */
-    void visit(HttpServletRequest request, HttpServletResponse response, String callBack, String key) throws IOException;
+    void visit(HttpServletRequest request, HttpServletResponse response, String callBack, String key, String path, boolean notAdd) throws IOException;
 }
