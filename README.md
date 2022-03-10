@@ -37,7 +37,7 @@
   //设置上一节获取到的key
   window.qieziStatisticKey = "d862c12a68ad4d579c6066ac2f064a07";
 </script>
-<script src="/qiezijs/1.0/qiezi_statistic.min.js" type="text/javascript"></script>
+<script src="https://qiezi.fleyx.com/qiezijs/1.0/qiezi_statistic.min.js" type="text/javascript"></script>
 ```
 
 效果如下：
