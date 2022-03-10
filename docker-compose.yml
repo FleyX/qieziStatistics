@@ -27,7 +27,7 @@ services:
       - |
         sleep 5 && \
         java -jar -Dspring.profiles.active=prd \
-        -Dmybatis-plus.configuration.log-impl=org.apache.ibatis.logging.nologging.NoLoggingImpl \
+        -Dmybatis.configuration.log-impl=org.apache.ibatis.logging.nologging.NoLoggingImpl \
         -Dspring.datasource.user='${MYSQL_USER}' \
         -Dspring.datasource.password='${MYSQL_PASSWORD}' \
         -Dspring.datasource.url=jdbc:mysql://${MYSQL_ADDRESS}/qiezi?useUnicode=true\&characterEncoding=utf-8\&useSSL=false\&useJDBCCompliantTimezoneShift=true\&useLegacyDatetimeCode=false\&serverTimezone=UTC \
