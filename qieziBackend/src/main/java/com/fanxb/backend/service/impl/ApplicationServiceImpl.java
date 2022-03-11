@@ -120,6 +120,7 @@ public class ApplicationServiceImpl implements ApplicationService {
             } else {
                 detailPageDao.updateUvPv(detailPagePo.getId(), pageVal == null ? 1 : 0);
             }
+            //更新站点的日pv,uv
         });
     }
 
