@@ -20,6 +20,7 @@ public interface DetailPageDao {
      * date 2022/2/15 16:39
      */
     @Insert("insert into detail_page(hostId,path,pv,uv) value(#{hostId},#{path},#{pv},#{uv})")
+    @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     void insertOne(DetailPagePo detailPagePo);
 
     /**

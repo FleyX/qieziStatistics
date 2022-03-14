@@ -6,7 +6,7 @@ import lombok.experimental.Accessors;
 
 @Data
 @Accessors(chain = true)
-public class HostDayPo {
+public class DetailPageDayPo {
 
     /**
      * id
@@ -15,7 +15,7 @@ public class HostDayPo {
     /**
      * hostId
      */
-    private int hostId;
+    private int detailPageId;
     /**
      * 日期20200202
      */

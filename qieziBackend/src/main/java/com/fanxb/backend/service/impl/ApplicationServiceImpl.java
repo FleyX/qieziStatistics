@@ -1,23 +1,25 @@
 package com.fanxb.backend.service.impl;
 
 import cn.hutool.core.util.IdUtil;
-import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.Header;
 import com.alibaba.fastjson.JSON;
-import com.fanxb.backend.constants.RedisConstant;
 import com.fanxb.backend.constants.CommonConstant;
+import com.fanxb.backend.constants.RedisConstant;
 import com.fanxb.backend.dao.DetailPageDao;
+import com.fanxb.backend.dao.DetailPageDayDao;
 import com.fanxb.backend.dao.HostDao;
+import com.fanxb.backend.dao.HostDayDao;
 import com.fanxb.backend.entity.dto.ApplicationSignDto;
 import com.fanxb.backend.entity.exception.CustomBaseException;
+import com.fanxb.backend.entity.po.DetailPageDayPo;
 import com.fanxb.backend.entity.po.DetailPagePo;
+import com.fanxb.backend.entity.po.HostDayPo;
 import com.fanxb.backend.entity.po.HostPo;
 import com.fanxb.backend.entity.vo.ApplicationSignVo;
 import com.fanxb.backend.entity.vo.UvPvVo;
 import com.fanxb.backend.service.ApplicationService;
 import com.fanxb.backend.util.NetUtil;
 import com.fanxb.backend.util.ThreadPoolUtil;
-import jdk.jfr.ContentType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
@@ -25,11 +27,10 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -40,15 +41,20 @@ import java.util.concurrent.TimeUnit;
  */
 @Service
 public class ApplicationServiceImpl implements ApplicationService {
+
     private final StringRedisTemplate stringRedisTemplate;
     private final HostDao hostDao;
     private final DetailPageDao detailPageDao;
+    private final HostDayDao hostDayDao;
+    private final DetailPageDayDao detailPageDayDao;
 
     @Autowired
-    public ApplicationServiceImpl(StringRedisTemplate stringRedisTemplate, HostDao hostDao, DetailPageDao detailPageDao) {
+    public ApplicationServiceImpl(StringRedisTemplate stringRedisTemplate, HostDao hostDao, DetailPageDao detailPageDao, HostDayDao hostDayDao, DetailPageDayDao detailPageDayDao) {
         this.stringRedisTemplate = stringRedisTemplate;
         this.hostDao = hostDao;
         this.detailPageDao = detailPageDao;
+        this.hostDayDao = hostDayDao;
+        this.detailPageDayDao = detailPageDayDao;
     }
 
     @Override
@@ -94,10 +100,10 @@ public class ApplicationServiceImpl implements ApplicationService {
      * @param hostPo       hostPo
      * @param detailPagePo detailPagePo
      * @author fanxb
-     * date 2022/2/16 15:40
      */
     private void updateData(String ip, HostPo hostPo, DetailPagePo detailPagePo) {
         String hostKey = RedisConstant.HOST_UV_PRE + hostPo.getId() + "_" + ip;
+        //记录ip是否在当天访问过host
         String hostVal = stringRedisTemplate.opsForValue().get(hostKey);
         hostPo.setPv(hostPo.getPv() + 1);
         long tomorrowZero = LocalDate.now().plusDays(1).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
@@ -106,6 +112,7 @@ public class ApplicationServiceImpl implements ApplicationService {
             hostPo.setUv(hostPo.getUv() + 1);
         }
         String pageKey = RedisConstant.PAGE_UV_PRE + hostPo.getId() + ip + detailPagePo.getPath();
+        //记录ip是否在当天访问过页面
         String pageVal = stringRedisTemplate.opsForValue().get(pageKey);
         detailPagePo.setPv(detailPagePo.getPv() + 1);
         if (pageVal == null) {
@@ -121,7 +128,46 @@ public class ApplicationServiceImpl implements ApplicationService {
                 detailPageDao.updateUvPv(detailPagePo.getId(), pageVal == null ? 1 : 0);
             }
             //更新站点的日pv,uv
+            int dayNum = Integer.parseInt(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE).replaceAll("-", ""));
+            hostDayDao.updatePvUv(getDayTableId(hostPo.getId(), dayNum, RedisConstant.DAY_HOST_ID_PRE), 1, hostVal == null ? 1 : 0);
+            detailPageDayDao.updatePvUv(getDayTableId(detailPagePo.getId(), dayNum, RedisConstant.DAY_DETAIL_PAGE_ID_PRE), 1, pageVal == null ? 1 : 0);
         });
+    }
+
+    /**
+     * 获取表id，数据行不存在时新增行
+     *
+     * @param id   id
+     * @param day  day(20220202)
+     * @param type 类型
+     * @author fanxb
+     */
+    private int getDayTableId(int id, int day, String type) {
+        String key = type + "_" + id + "_" + day;
+        String val = stringRedisTemplate.opsForValue().get(key);
+        if (val != null) {
+            return Integer.parseInt(val);
+        }
+        //redis中没有,从数据库中查找
+        Integer dbId = RedisConstant.DAY_HOST_ID_PRE.equals(type) ? hostDayDao.getId(id, day) : detailPageDayDao.getId(id, day);
+        if (dbId == null) {
+            //TODO 此次应该加锁，避免并发情况下重复创建报错
+            dbId = RedisConstant.DAY_HOST_ID_PRE.equals(type) ? hostDayDao.getId(id, day) : detailPageDayDao.getId(id, day);
+            if (dbId == null) {
+                //数据库中也没有，需要先初始化数据库中数据
+                if (RedisConstant.DAY_HOST_ID_PRE.equals(type)) {
+                    HostDayPo hostDayPo = new HostDayPo().setHostId(id).setDayNum(day);
+                    hostDayDao.insert(hostDayPo);
+                    dbId = hostDayPo.getId();
+                } else {
+                    DetailPageDayPo detailPageDayPo = new DetailPageDayPo().setDetailPageId(id).setDayNum(day);
+                    detailPageDayDao.insert(detailPageDayPo);
+                    dbId = detailPageDayPo.getId();
+                }
+            }
+        }
+        stringRedisTemplate.opsForValue().set(key, dbId.toString());
+        return dbId;
     }
 
     /**
@@ -130,7 +176,6 @@ public class ApplicationServiceImpl implements ApplicationService {
      * @param key key
      * @return {@link int}
      * @author fanxb
-     * date 2022/2/16 15:37
      */
     private int getHostId(String key) {
         String id = stringRedisTemplate.opsForValue().get(key);
@@ -141,7 +186,7 @@ public class ApplicationServiceImpl implements ApplicationService {
         if (hostId == null) {
             throw new CustomBaseException("key无效:" + key);
         }
-        stringRedisTemplate.opsForValue().set(key, hostId.toString());
+        stringRedisTemplate.opsForValue().set(key, hostId.toString(), 2, TimeUnit.DAYS);
         return hostId;
     }
 
