@@ -22,6 +22,7 @@ import com.fanxb.backend.util.NetUtil;
 import com.fanxb.backend.util.ThreadPoolUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -31,7 +32,9 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
 
 /**
  * 应用管理
@@ -72,8 +75,16 @@ public class ApplicationServiceImpl implements ApplicationService {
         return new ApplicationSignVo(po.getKey(), po.getSecret());
     }
 
+    private static Pattern PATTERN = Pattern.compile("googlebot|bingbot|yandex|baiduspider|360Spider|Sogou Spider|Bytespider|twitterbot|facebookexternalhit|rogerbot|linkedinbot|embedly|quora link preview|showyoubot|outbrain|pinterest\\/0\\.|pinterestbot|slackbot|vkShare|W3C_Validator|whatsapp");
+
     @Override
     public void visit(HttpServletRequest request, HttpServletResponse response, String callBack, String key, String path, boolean notAdd) throws IOException {
+        //检查是否搜索引擎的请求
+        String agent = request.getHeader(HttpHeaders.USER_AGENT);
+        if (agent != null && PATTERN.matcher(agent.toLowerCase(Locale.ROOT)).find()) {
+            //搜索引擎的直接返回
+            return;
+        }
         int hostId = getHostId(key);
         HostPo hostData = hostDao.getUvPvById(hostId);
         DetailPagePo detailData = detailPageDao.getUvPvById(hostId, path);
@@ -189,6 +200,5 @@ public class ApplicationServiceImpl implements ApplicationService {
         stringRedisTemplate.opsForValue().set(key, hostId.toString(), 2, TimeUnit.DAYS);
         return hostId;
     }
-
 
 }
