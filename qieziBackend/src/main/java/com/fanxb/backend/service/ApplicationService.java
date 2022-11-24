@@ -38,4 +38,14 @@ public interface ApplicationService {
      * date 2022/2/16 10:20
      */
     void visit(HttpServletRequest request, HttpServletResponse response, String callBack, String key, String path, boolean notAdd) throws IOException;
+
+    /**
+     * 检查key,secret是否存在
+     *
+     * @param body body
+     * @return boolean
+     * @author fanxb
+     * date 2022-11-24 23:05
+     */
+    boolean check(ApplicationSignVo body);
 }

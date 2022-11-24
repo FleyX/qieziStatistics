@@ -75,6 +75,11 @@ public class ApplicationServiceImpl implements ApplicationService {
         return new ApplicationSignVo(po.getKey(), po.getSecret());
     }
 
+    @Override
+    public boolean check(ApplicationSignVo body) {
+        return hostDao.exist(body.getKey(), body.getSecret());
+    }
+
     private static Pattern PATTERN = Pattern.compile("googlebot|bingbot|yandex|baiduspider|360Spider|Sogou Spider|Bytespider|twitterbot|facebookexternalhit|rogerbot|linkedinbot|embedly|quora link preview|showyoubot|outbrain|pinterest\\/0\\.|pinterestbot|slackbot|vkShare|W3C_Validator|whatsapp");
 
     @Override

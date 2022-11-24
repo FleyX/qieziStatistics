@@ -2,6 +2,7 @@ package com.fanxb.backend.controller;
 
 import com.fanxb.backend.entity.ResultObject;
 import com.fanxb.backend.entity.dto.ApplicationSignDto;
+import com.fanxb.backend.entity.vo.ApplicationSignVo;
 import com.fanxb.backend.service.ApplicationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -48,5 +49,16 @@ public class ApplicationController {
     public void visit(HttpServletRequest request, HttpServletResponse response, @NotBlank(message = "回调函数不能为空") String callBack
             , @NotBlank(message = "key不能为空") String key, @NotBlank(message = "path不能为空") String path, @RequestParam(defaultValue = "false") boolean notAdd) throws IOException {
         applicationService.visit(request, response, callBack, key, path, notAdd);
+    }
+
+    /**
+     * 检查key,secret是否存在
+     *
+     * @author fanxb
+     * date 2022/2/16 15:24
+     */
+    @PostMapping("/check")
+    public ResultObject check(@Validated @RequestBody ApplicationSignVo body) {
+        return ResultObject.success(applicationService.check(body));
     }
 }

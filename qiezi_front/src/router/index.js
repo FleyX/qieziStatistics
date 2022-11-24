@@ -12,6 +12,11 @@ const routes = [
 		name: "ApplicationSign",
 		component: () => import("../views/ApplicationSign"),
 	},
+	{
+		path: "/download",
+		name: "DataDownload",
+		component: () => import("../views/download"),
+	},
 ];
 
 const router = createRouter({

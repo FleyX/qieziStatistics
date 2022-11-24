@@ -23,6 +23,18 @@ public interface HostDao {
     void insertOne(HostPo host);
 
     /**
+     * 检查key,secret是否存在
+     *
+     * @param key    key
+     * @param secret secret
+     * @return boolean
+     * @author fanxb
+     * date 2022-11-24 23:06
+     */
+    @Select("select count(1) from host where `key`=#{key} and secret=#{secret}")
+    boolean exist(@Param("key") String key, @Param("secret") String secret);
+
+    /**
      * 根据key获取id
      *
      * @param key key

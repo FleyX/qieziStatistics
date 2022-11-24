@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <router-link to="/application/sign">应用注册</router-link><br />
-    <router-link to="/manage">应用管理</router-link>
+    <router-link to="/download">数据下载</router-link>
   </div>
 </template>
 
