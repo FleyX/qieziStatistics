@@ -61,4 +61,17 @@ public class ApplicationController {
     public ResultObject check(@Validated @RequestBody ApplicationSignVo body) {
         return ResultObject.success(applicationService.check(body));
     }
+
+    /**
+     * 下载统计数据
+     *
+     * @return com.fanxb.backend.entity.ResultObject
+     * @author fanxb
+     * date 2022-11-25 15:26
+     */
+    @GetMapping("/download")
+    public void download(String key, String secret, HttpServletResponse response) throws Exception {
+        applicationService.download(key, secret, response);
+
+    }
 }

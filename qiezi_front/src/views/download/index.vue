@@ -1,5 +1,5 @@
 <template>
-  <div class="title">数据下载</div>
+  <div class="title">站点数据下载</div>
   <a-form :model="form" :label-col="{ span: 4 }" :wrapper-col="{ span: 14 }" style="width: 80%; margin: 0 auto">
     <a-form-item label="key">
       <a-input type="text" v-model:value="form.key" />
@@ -11,7 +11,7 @@
       <a-button type="primary" @click="onSubmit">下载</a-button>
     </a-form-item>
   </a-form>
-  <a id="download" :href="'/download?key=' + form.key + '&secret=' + form.secret" download class="download-a">download</a>
+  <a id="download" :href="'/qiezi/api/application/download?key=' + form.key + '&secret=' + form.secret" download class="download-a">download</a>
 </template>
 
 <script setup>

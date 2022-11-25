@@ -4,6 +4,8 @@ import com.fanxb.backend.entity.po.DetailPagePo;
 import com.fanxb.backend.entity.po.HostPo;
 import org.apache.ibatis.annotations.*;
 
+import java.util.List;
+
 /**
  * @author fanxb
  * @date 2022/2/15 16:37
@@ -45,4 +47,15 @@ public interface DetailPageDao {
      */
     @Update("update detail_page set uv=uv+#{uvIncrement},pv=pv+1 where id=#{id}")
     void updateUvPv(@Param("id") int id, @Param("uvIncrement") int uvIncrement);
+
+    /**
+     * 根据hostId查询数据
+     *
+     * @param hostId hostId
+     * @return java.util.List<com.fanxb.backend.entity.po.DetailPagePo>
+     * @author fanxb
+     * date 2022-11-25 15:47
+     */
+    @Select("select * from detail_page where hostId=#{hostId}")
+    List<DetailPagePo> selectByHostId(int hostId);
 }
