@@ -1,7 +1,10 @@
 <template>
   <div class="home">
     <router-link to="/application/sign">应用注册</router-link><br />
-    <router-link to="/manage">应用管理</router-link>
+    <router-link to="/download">数据下载</router-link><br />
+    <div style="padding-top: 1em">
+      <a href="https://blog.fleyx.com/blog/detail/20221125" target="_blank">使用文档</a>
+    </div>
   </div>
 </template>
 

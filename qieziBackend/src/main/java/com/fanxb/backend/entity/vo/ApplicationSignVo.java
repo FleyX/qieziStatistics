@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotBlank;
+
 /**
  * 应用注册vo
  *
@@ -14,6 +16,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ApplicationSignVo {
+    @NotBlank(message = "key不能为空")
     private String key;
+    @NotBlank(message = "secret不能为空")
     private String secret;
 }

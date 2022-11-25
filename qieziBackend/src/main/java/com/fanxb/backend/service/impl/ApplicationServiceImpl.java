@@ -2,6 +2,8 @@ package com.fanxb.backend.service.impl;
 
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.http.Header;
+import com.alibaba.excel.EasyExcel;
+import com.alibaba.excel.ExcelWriter;
 import com.alibaba.fastjson.JSON;
 import com.fanxb.backend.constants.CommonConstant;
 import com.fanxb.backend.constants.RedisConstant;
@@ -9,6 +11,9 @@ import com.fanxb.backend.dao.DetailPageDao;
 import com.fanxb.backend.dao.DetailPageDayDao;
 import com.fanxb.backend.dao.HostDao;
 import com.fanxb.backend.dao.HostDayDao;
+import com.fanxb.backend.entity.bo.ReportDetailPageBo;
+import com.fanxb.backend.entity.bo.ReportHostBo;
+import com.fanxb.backend.entity.bo.ReportHostDayBo;
 import com.fanxb.backend.entity.dto.ApplicationSignDto;
 import com.fanxb.backend.entity.exception.CustomBaseException;
 import com.fanxb.backend.entity.po.DetailPageDayPo;
@@ -28,13 +33,17 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.Collections;
+import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * 应用管理
@@ -73,6 +82,12 @@ public class ApplicationServiceImpl implements ApplicationService {
         hostDao.insertOne(po);
         stringRedisTemplate.opsForValue().set(RedisConstant.KEY_ID_PRE + po.getKey(), String.valueOf(po.getId()));
         return new ApplicationSignVo(po.getKey(), po.getSecret());
+    }
+
+    @Override
+    public boolean check(ApplicationSignVo body) {
+        HostPo po = hostDao.selectByKeyAndSecret(body.getKey(), body.getSecret());
+        return po != null;
     }
 
     private static Pattern PATTERN = Pattern.compile("googlebot|bingbot|yandex|baiduspider|360Spider|Sogou Spider|Bytespider|twitterbot|facebookexternalhit|rogerbot|linkedinbot|embedly|quora link preview|showyoubot|outbrain|pinterest\\/0\\.|pinterestbot|slackbot|vkShare|W3C_Validator|whatsapp");
@@ -201,4 +216,23 @@ public class ApplicationServiceImpl implements ApplicationService {
         return hostId;
     }
 
+    @Override
+    public void download(String key, String secret, HttpServletResponse response) throws Exception {
+        HostPo po = hostDao.selectByKeyAndSecret(key, secret);
+        if (po == null) {
+            throw new CustomBaseException("key,secret不存在");
+        }
+        List<ReportHostBo> hostList = Collections.singletonList(new ReportHostBo(po));
+        List<ReportHostDayBo> hostDayList = hostDayDao.selectByHostId(po.getId()).stream().map(ReportHostDayBo::new).collect(Collectors.toList());
+        List<ReportDetailPageBo> detailPageList = detailPageDao.selectByHostId(po.getId()).stream().map(ReportDetailPageBo::new).collect(Collectors.toList());
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        response.setCharacterEncoding("utf-8");
+        String fileName = URLEncoder.encode(po.getName() + "-站点导出数据", StandardCharsets.UTF_8).replaceAll("\\+", "%20");
+        response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx");
+        ExcelWriter writer = EasyExcel.write(response.getOutputStream()).build();
+        writer.write(hostList, EasyExcel.writerSheet(0, "站点数据").head(ReportHostBo.class).build());
+        writer.write(hostDayList, EasyExcel.writerSheet(1, "站点日数据").head(ReportHostDayBo.class).build());
+        writer.write(detailPageList, EasyExcel.writerSheet(2, "页面数据").head(ReportDetailPageBo.class).build());
+        writer.finish();
+    }
 }

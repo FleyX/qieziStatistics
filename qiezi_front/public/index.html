@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="">
+<html lang="zh">
   <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-    <link rel="icon" href="<%= BASE_URL %>favicon.ico" />
-    <title><%= htmlWebpackPlugin.options.title %></title>
+    <link rel="icon" href="<%= BASE_URL %>ico.png" />
+    <title>茄子统计</title>
   </head>
   <body>
     <noscript>
@@ -15,16 +15,18 @@
       >
     </noscript>
 
-    <div id="app"></div>
+    <div id="app" style="padding-top: 20vh"></div>
 
     <!-- 页面PV -->
-    <div style="text-align: center">
-      <div id="qieziStatisticHtmlPost" style="display: none">当前页面访问次数:<span id="qieziStatisticHtmlPostPv"></span>次&nbsp;</div>
-    </div>
-    <!-- 网站整体UV/PV -->
-    <div style="text-align: center">
-      <div id="qieziStatisticHtmlHostPv" style="display: none">总访问次数:<span id="qieziStatisticHtmlHostPvValue"></span>次&nbsp;</div>
-      <div id="qieziStatisticHtmlHostUv" style="display: none">&nbsp;总访客数:<span id="qieziStatisticHtmlHostUvValue"></span>人</div>
+    <div style="position: fixed; width: 100%; bottom: 0">
+      <div style="text-align: center">
+        <div id="qieziStatisticHtmlPost" style="display: none">当前页面访问次数:<span id="qieziStatisticHtmlPostPv"></span>次&nbsp;</div>
+      </div>
+      <!-- 网站整体UV/PV -->
+      <div style="text-align: center">
+        <div id="qieziStatisticHtmlHostPv" style="display: none">总访问次数:<span id="qieziStatisticHtmlHostPvValue"></span>次&nbsp;</div>
+        <div id="qieziStatisticHtmlHostUv" style="display: none">&nbsp;总访客数:<span id="qieziStatisticHtmlHostUvValue"></span>人</div>
+      </div>
     </div>
     <script>
       //设置实际部署的host和key

@@ -4,22 +4,29 @@
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-    <link rel="icon" href="/favicon.ico" />
+    <link rel="icon" href="/ico.png" />
     <title>茄子统计</title>
   </head>
   <body>
     <div class="app">
-      免费UV,PV统计，也可直接使用,也可进行私有部署后使用。<br />
-      使用文档见：<a href="https://github.com/FleyX/qieziStatistics">开始使用</a>
+      <div class="desc">
+        个人站点UV、PV统计，支持页面显示，常用于个人博客展示阅读数。比如我的个人博客：<a href="https://blog.fleyx.com/">FleyX's Blog</a><br />
+        支持开箱即用，只需几行代码即可为您的站点加上统计数据。<br />
+        代码完全开源于<a href="https://github.com/FleyX/qieziStatistics">github</a>,因此也支持自行独立部署使用。<br />
+        支持站点数据excel导出，方便切换统计工具。<br />
+        <a href="/manage">开始使用吧</a>
+      </div>
     </div>
     <!-- 页面PV -->
-    <div style="text-align: center">
-      <div id="qieziStatisticHtmlPost" style="display: none">当前页面访问次数:<span id="qieziStatisticHtmlPostPv"></span>次&nbsp;</div>
-    </div>
-    <!-- 网站整体UV/PV -->
-    <div style="text-align: center">
-      <div id="qieziStatisticHtmlHostPv" style="display: none">总访问次数:<span id="qieziStatisticHtmlHostPvValue"></span>次&nbsp;</div>
-      <div id="qieziStatisticHtmlHostUv" style="display: none">&nbsp;总访客数:<span id="qieziStatisticHtmlHostUvValue"></span>人</div>
+    <div style="position: fixed; bottom: 0; width: 100%">
+      <div style="text-align: center">
+        <div id="qieziStatisticHtmlPost" style="display: none">当前页面访问次数:<span id="qieziStatisticHtmlPostPv"></span>次&nbsp;</div>
+      </div>
+      <!-- 网站整体UV/PV -->
+      <div style="text-align: center">
+        <div id="qieziStatisticHtmlHostPv" style="display: none">总访问次数:<span id="qieziStatisticHtmlHostPvValue"></span>次&nbsp;</div>
+        <div id="qieziStatisticHtmlHostUv" style="display: none">&nbsp;总访客数:<span id="qieziStatisticHtmlHostUvValue"></span>人</div>
+      </div>
     </div>
     <script>
       //设置实际部署的host和key
@@ -31,7 +38,12 @@
       .app {
         width: 80%;
         margin: 0 auto;
+        margin-top: 20vh;
         text-align: center;
+      }
+      .desc {
+        font-size: 1.2em;
+        font-weight: 600;
       }
     </style>
   </body>
