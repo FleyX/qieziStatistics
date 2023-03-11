@@ -2,9 +2,7 @@
   <router-view />
 </template>
 
-<script setup>
-import { onMounted } from "@vue/runtime-core";
-</script>
+<script setup></script>
 
 <style lang="less">
 html {
