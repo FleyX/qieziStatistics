@@ -21,4 +21,4 @@ steps:
         from_secret: privateSsh
       timeout: 3m
       script:
-        - cd /root/qieziStatistics && git pull && bash build.sh && syncFile.sh
+        - cd /root/qieziStatistics && git pull && bash build.sh && bash syncFile.sh
