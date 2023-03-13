@@ -2,7 +2,6 @@ package middleware
 
 import (
 	"github.com/gin-gonic/gin"
-	"net/http"
 	"time"
 )
 
@@ -15,8 +14,7 @@ func Auth() gin.HandlerFunc {
 		if ok {
 			context.Next()
 		} else {
-			context.Status(http.StatusUnauthorized)
-			context.Writer.WriteString(`无访问权限`)
+			context.String(401, "无访问权限")
 			context.Abort()
 		}
 		ok = !ok
